@@ -1,4 +1,4 @@
-s# Terminal Gmail
+# Terminal Gmail
 Terminal based gmail viewer support basic features.
 ## Supported features
 1. Reading email
