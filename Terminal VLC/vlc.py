@@ -144,6 +144,29 @@ def PlaySongWithId(play_id):
     payload = {'command':'pl_play','id':play_id}
     current_status = PlayerStatus(payload)
 
+def AddFolderToPlaylist(folder):
+    music_folder = "/Users/amit.kumar12/Music"
+    folder_map = {
+        'eng': 'EnglishSongs',
+        'love': 'LoveSongs',
+        'new': 'NewSongs',
+        'fav': 'FavouriteSongs',
+        'pan':'PanjabiSongs'
+    }
+    folder_path = os.path.join(music_folder,folder_map[folder])
+    files = os.listdir(folder_path)
+    song_format = [
+        'mp3',
+        'm4a'
+    ]
+
+    for filename in files:
+        extension = filename[-3:]
+        if extension in song_format:
+           EnqueueToPlaylist(os.path.join(folder_path,filename))
+
+    ForcePause()
+
 def SortPlaylist():
     """
     Sort PlayList
@@ -183,6 +206,7 @@ def ToggleRepeat():
     """
     payload = {'command': 'pl_repeat'}
     current_status = PlayerStatus(payload)
+
 def JumpPlayTime(time):
     """
     Jump by percentage in play
@@ -199,21 +223,23 @@ def DeleteSong():
     # command=pl_delete&id=13
 
     current_status = PlayerStatus()
-    playlist = PlayerPlaylist()
-    PrintJSON(playlist)
+    playlistWithID = []
+    FindTwoKeys('id','uri',PlayerPlaylist(),playlistWithID)
+    # playlisst = PlayerPlaylist()
+    # PrintJSON(playlist)
 
-    # currentplid = current_status['currentplid']
-    # print currentplid
+    currentplid = current_status['currentplid']
+    PlayNext()
+    payload = {'command': 'pl_delete', 'id': currentplid}
+    current_status = PlayerStatus(payload)
 
-
-    # PrintJSON(current_status)
-    # payload = {'command': 'pl_delete', 'id': currentplid}
-    # current_status = PlayerStatus(payload)
-    # PrintJSON(current_status)
-# def LoadDirectorySongs(dir);
+    for item in playlistWithID:
+        if int(item['id']) == int(currentplid):
+            os.remove(item['uri'])
 
 def PlayFavourite():
     print "playing your favourite songs here.."
+
 def EmptyPlaylist():
     """ Empty the current playlist of VLC
     empty playlist:
@@ -221,6 +247,7 @@ def EmptyPlaylist():
     """
     payload = {'command':'pl_empty'}
     current_status = PlayerStatus(payload)
+
 def IncreaseVolume():
     current_status = PlayerStatus()
     volume = current_status['volume'] + 40
@@ -284,6 +311,9 @@ if __name__ == '__main__':
         elif option == "song":
             song_id = int(sys.argv[2])
             PlaySongWithId(song_id)
+        elif option == "add":
+            folder = sys.argv[2]
+            AddFolderToPlaylist(folder)
         elif option == "playlist":
             ShowPlaylist()
         else:
