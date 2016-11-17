@@ -276,6 +276,11 @@ def Help():
     print "Increase Volume : up"
     print "Decrease Volume : down"
     print "Set Volume: vol <val>"
+    print "Show Playlist : playslit"
+    print "Clear Playlist: clear"
+    print "Add Folder To Playlist: add <folder>"
+    print "Play Specific Song ID: song <id>"
+    print "Delete Current Song : del"
 
 
 if __name__ == '__main__':
