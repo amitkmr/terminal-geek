@@ -2,7 +2,7 @@
 Termial based Google Drive Client for uploading and downloading of files
 
 ## Supported Features
-1. Upload file to Drive Home Folder
+1. Upload file to Drive Home Folder  drive fileUplaod
 2. List recently worked files
 3. Downloading a selected file
 
