@@ -330,8 +330,29 @@ alias vb='vlc prev'
 chrome() {
     open -a "Google Chrome" "$1"
 }
-function @google {
+function g {
     open "https://google.com/search?q=$*"
 }
+function slack {
+  open "https://timesinternet.slack.com/messages/@amit.kumar12/"
+
+}
+function yt {
+  open "https://www.youtube.com/"
+
+}
+function wp {
+  open "https://web.whatsapp.com/"
+}
+function fb {
+  open "https://www.facebook.com"
+}
+function msg {
+  open "https://www.messenger.com/"
+}
+function bb {
+  open "https://bitbucket.org/dashboard/overview"
+}
+
 PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND ; }"'echo `dt` $$ $USER \
                "$(history 1)" >> ~/.bash_eternal_history'
