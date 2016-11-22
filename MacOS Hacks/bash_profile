@@ -353,6 +353,10 @@ function msg {
 function bb {
   open "https://bitbucket.org/dashboard/overview"
 }
+function gh() {
+  origin="`git remote get-url origin`"
+  open $origin
+}
 
 PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND ; }"'echo `dt` $$ $USER \
                "$(history 1)" >> ~/.bash_eternal_history'
