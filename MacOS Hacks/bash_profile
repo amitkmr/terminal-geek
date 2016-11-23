@@ -13,7 +13,9 @@
  #  7.  System Operations & Information
  #  8.  Web Development
  #  9.  Reminders & Notes
- #  10. Git Command
+ #  10. Close Application
+ #  11. Git Command
+ #  12. Custom Programs
  #  ---------------------------------------------------------------------------
 
  #   -------------------------------
@@ -304,7 +306,24 @@ httpDebug () { /usr/bin/curl $@ -o /dev/null -w "dns: %{time_namelookup} connect
 #   then use: ~/Dev/Perl/randBytes 1048576 > 10MB.dat
 
 #   ---------------------------------------
-#   9. GIT COMMANDS
+#   9. CLOSE APPLICATIONS
+#   ---------------------------------------
+function quit() {
+  osascript -e "quit app \"$@\""
+}
+function quitall() {
+  osascript -e "quit app \"Chrome\""
+  osascript -e "quit app \"VLC\""
+  osascript -e "quit app \"Xcode\""
+  osascript -e "quit app \"atom\""
+  osascript -e "quit app \"Pycharm\""
+  osascript -e "quit app \"System Preferences\""
+  osascript -e "quit app \"Outlook\""
+  osascript -e "quit app \"Terminal\""
+}
+
+#   ---------------------------------------
+#   10. GIT COMMANDS
 #   ---------------------------------------
 alias gi='git init'
 alias gs='git status'
@@ -319,6 +338,9 @@ alias atom='open -a atom'
 #   ---------------------------------------
 #  11. CUSTOM FUNCTIONS
 #   ---------------------------------------
+alias py='python'
+
+###### Custom VLC Program ##################
 alias v='vlc'
 alias vn='vlc next'
 alias vd='vlc down'
@@ -357,6 +379,11 @@ function gh() {
   origin="`git remote get-url origin`"
   open $origin
 }
-
+function github() {
+  open "https://github.com/amitkmr"
+}
+function gdrive() {
+  open "https://drive.google.com/drive/my-drive"
+}
 PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND ; }"'echo `dt` $$ $USER \
                "$(history 1)" >> ~/.bash_eternal_history'
