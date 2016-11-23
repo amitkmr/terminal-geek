@@ -7,3 +7,4 @@ again, then this is for you.
 2. Function to open commonly used urls
 3. Google search from terminal
 4. Open git remote from terminal directly
+5. Quit app from terminal itself
