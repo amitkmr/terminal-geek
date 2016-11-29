@@ -7,6 +7,7 @@ import requests
 import json
 import os
 import logging
+import urllib2
 
 #### Global Variable #####
 
@@ -227,15 +228,20 @@ def DeleteSong():
     FindTwoKeys('id','uri',PlayerPlaylist(),playlistWithID)
     # playlisst = PlayerPlaylist()
     # PrintJSON(playlist)
-
+    # print playlistWithID
     currentplid = current_status['currentplid']
     PlayNext()
     payload = {'command': 'pl_delete', 'id': currentplid}
     current_status = PlayerStatus(payload)
 
     for item in playlistWithID:
-        if int(item['id']) == int(currentplid):
-            os.remove(item['uri'])
+        if int(item['id']) == int(currentplid) - 1 :       # Why this ask VLC Team :P id and Currentpid differ by 1 in status and playlist.xml
+            file_path = urllib2.unquote(item['uri'])
+            file_path = file_path.split('//')[-1]
+            # file_path = "\ ".join(file_path.split('%20'))
+            # print file_path
+            os.remove(file_path)
+            # print item['uri'].split('//')[-1]
 
 def PlayFavourite():
     print "playing your favourite songs here.."
