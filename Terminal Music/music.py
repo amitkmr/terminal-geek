@@ -1,4 +1,4 @@
-
+#!/usr/bin/python
 from pyquery import PyQuery as pq
 import re
 import youtube_dl
@@ -195,13 +195,15 @@ def YoutubeTrendingMusic():
 
 
 def Help():
-    print "Music Downloader"
+    print "Youtube Audio Downloader"
     print "-----------------------------------"
+    print "Trending on Youtube India : music trending"
     print "Search Song: music search '<Song Title>'"
-    print "Download Favourite : music fav "
-    print "Download Recent From Tseries : music tseries"
-    print "Download Recent From Sony Music India : music sony"
-    print "Download Recent From youtube channel  : music channel <channel_url>"
+    print "Favourite : music fav "
+    print "Recent From Tseries : music tseries"
+    print "Recent From Sony Music India : music sony"
+    print "Recent From any youtube channel  : music channel <channel_url>"
+    print "From URL : music url <url>"
 
 
 if __name__ == '__main__':
