@@ -7,15 +7,6 @@ import sqlite3
 import os
 import shutil
 
-##### Global Variable #######
-
-FAVOURITE_CHANNELS = [
-    'https://www.youtube.com/user/tseries/videos',
-    'https://www.youtube.com/user/sonymusicindiaSME/videos'
-]
-
-
-
 class MyLogger(object):
     def debug(self, msg):
         # print(msg)
@@ -31,7 +22,8 @@ class MyLogger(object):
 
 def my_hook(d):
     if d['status'] == 'finished':
-        print('Done downloading .....')
+        print "Done.."
+        print "-----------------------------------------------------------------"
 
 
 def DownloadMP3(url):
@@ -43,6 +35,9 @@ def DownloadMP3(url):
         'progress_hooks': [my_hook],
     }
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        info_dict = ydl.extract_info(url, download=False)
+        video_title = info_dict.get('title', None)
+        print "Downloading.. : " + video_title
         ydl.download([url])
 
 def SelectMusicFolder(folder_name):
@@ -231,5 +226,9 @@ if __name__ == '__main__':
         elif option == "channel":
             youtube_channel = sys.argv[2]
             LatestMusicFromChannel(youtube_channel)
+        elif option == "url":
+            youtube_url = sys.argv[2]
+            SelectMusicFolder(folder_name="URLDownload")
+            DownloadMP3(youtube_urls)
         else:
             Help()
