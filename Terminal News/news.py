@@ -1,4 +1,5 @@
-from pyquery import PyQuery as pq
+import requests
+from bs4 import BeautifulSoup
 import sys
 import itertools
 import  time
@@ -31,101 +32,110 @@ def PrintHeadlines(headlines):
 def PrintNews(headline,body_content):
     global pdf_flag
     print "==============================================================="
-    print headline
+    print headline.encode('utf-8')
     print "-" * len(headline)    # underlining of headline
-    print body_content
+    print body_content.encode('utf-8')
     print "\n==============================================================="
 
 def TheHinduHeadlines():
     StartProgress()
-    content = pq(url="http://www.thehindu.com/todays-paper/")
-    headlines = content(".tpaper").find('a')   # CSS class selector
-    length = len(headlines)
+    # Load the Html Content of the Page. 
+    html_doc = requests.get("http://www.thehindu.com/todays-paper/").content
+    soup = BeautifulSoup(html_doc,'html.parser')
+    headlines_section = soup.find('section',attrs={'id':'section_'})
+    
+    headline_items = headlines_section.find('ul',attrs={'class':'archive-list'}).find_all('li') #List of all the headlines
+    # print(headline_items)
 
-    headline_arr = []
-    link_arr = []
-    for i in range(0,min(5,length)):
-        headline = headlines.eq(i).text()     # anchor text from links
-        link = headlines.eq(i).attr('href')
-        headline_arr.append(headline)
-        link_arr.append(link)
+    headlines_texts = []
+    headlines_links = []
+
+    for i in range(0,min(5,len(headline_items))) :
+        item = headline_items[i].find('a')
+        headlines_texts.append(item.text)
+        headlines_links.append(item.get('href'))
+
     while 1:
-        url = link_arr[PrintHeadlines(headline_arr)]
-        content = pq(url)
-        article_content = content(".article-text").find('p').text()
-        headline = content("h1").text()
-        PrintNews(headline,article_content)
+        url = headlines_links[PrintHeadlines(headlines_texts)]
+        html_doc = requests.get(url).content
+        soup = BeautifulSoup(html_doc,'html.parser')
+        article_content = ""
+        if len(html_doc) == 0:
+            article_content = "Failed to load content, Open link:" + url
+        headline = soup.h1.text
+        paragraphs = soup.find_all('p')
+
+        for para in paragraphs:
+            article_content = article_content + "\n" + para.text + "       "
+
+        PrintNews(headline, article_content)
+    
+
 
 def TOIHeadlines():
     StartProgress()
-    content = pq(url="http://timesofindia.indiatimes.com/")
-    headlines = content(".top-story")
-    length = len(headlines.find('li'))
+    # Load the Html Content of the Page.
+    html_doc = requests.get("https://timesofindia.indiatimes.com/").content
+    soup = BeautifulSoup(html_doc, 'html.parser')
+    headlines_section = soup.find('div', attrs={'class': 'top-story'})
 
-    headline_arr = []
-    link_arr = []
-    for i in range(0, min(5, length)):
-        headline = headlines.find('li').eq(i).text()  # anchor text from links
-        link = "http://timesofindia.indiatimes.com/" + headlines.find('li').eq(i).find('a').eq(0).attr('href')
-        headline_arr.append(headline)
-        link_arr.append(link)
+    headline_items = headlines_section.find('ul').find_all(
+        'li')  # List of all the headlines
+    # print(headline_items)
+
+    headlines_texts = []
+    headlines_links = []
+
+    for i in range(0, min(5, len(headline_items))):
+        item = headline_items[i].find('a')
+        headlines_texts.append(item.text)
+        headlines_links.append("https://timesofindia.indiatimes.com" + item.get('href'))
 
     while 1:
-        url = link_arr[PrintHeadlines(headline_arr)]
-        content = pq(url)
-        article_content = content(".Normal").text()
-        if len(article_content) == 0:
+        url = headlines_links[PrintHeadlines(headlines_texts)]
+        html_doc = requests.get(url).content
+        soup = BeautifulSoup(html_doc, 'html.parser')
+
+        if len(html_doc) == 0:
             article_content = "Failed to load content, Open link:" + url
-        headline = content("h1").text()
-        # article_content = "".join(article_content.split('+'))
-        PrintNews(headline, article_content)
-
-def HindustanTimesHeadlines():
-    StartProgress()
-    content = pq(url="http://www.hindustantimes.com/")
-    headlines = content(".top_story_row").find('a')
-    length = len(headlines)
-
-    headline_arr = []
-    link_arr = []
-    for i in range(1, length):
-        headline = headlines.eq(i).text()  # anchor text from links
-        link = headlines.eq(i).attr('href')
-        headline_arr.append(headline)
-        link_arr.append(link)
-
-    while 1:
-        url = link_arr[PrintHeadlines(headline_arr)]
-        content = pq(url)
-        article_content = content("#div_storyContent").text()
-        headline = content("h1").text()
+        else:
+            headline = soup.h1.text
+            article_content = soup.find('div',attrs={'class':'Normal'}).text
         PrintNews(headline, article_content)
 
 def TheIndianExpressHeadlines():
+
     StartProgress()
-    content = pq(url="http://indianexpress.com/")
+    # Load the Html Content of the Page.
+    html_doc = requests.get("http://indianexpress.com/").content
+    soup = BeautifulSoup(html_doc, 'html.parser')
+    headlines_section = soup.find('div', attrs={'class': 'top-news'})
 
-    headlines = content(".right-part").eq(0).find('a')
-    length = len(headlines)
-    headline_arr = []
-    link_arr = []
+    headline_items = headlines_section.find('ul').find_all(
+        'li')  # List of all the headlines
+    # print(headline_items)
 
-    main_story_link = content('h1').find('a').attr('href')
-    main_headline = content('h1').find('a').text()
-    headline_arr.append(main_headline)
-    link_arr.append(main_story_link)
+    headlines_texts = []
+    headlines_links = []
 
-    for i in range(1, length):
-        headline = headlines.eq(i).text()  # anchor text from links
-        link = headlines.eq(i).attr('href')
-        headline_arr.append(headline)
-        link_arr.append(link)
+    for i in range(0, min(5, len(headline_items))):
+        item = headline_items[i].find('a')
+        headlines_texts.append(item.text)
+        headlines_links.append(item.get('href'))
 
     while 1:
-        url = link_arr[PrintHeadlines(headline_arr)]
-        content = pq(url)
-        article_content = content('.full-details').find('p').text()
-        headline = content("h1").text()
+        url = headlines_links[PrintHeadlines(headlines_texts)]
+        html_doc = requests.get(url).content
+        soup = BeautifulSoup(html_doc, 'html.parser')
+        article_content = ""
+        if len(html_doc) == 0:
+            article_content = "Failed to load content, Open link:" + url
+        else:
+            headline = soup.h1.text
+            paragraphs = soup.find_all('p')
+
+            for para in paragraphs:
+                article_content = article_content + "\n" + para.text + "       "
         PrintNews(headline, article_content)
 
 def Progress():
@@ -151,7 +161,6 @@ def Help():
     print "Give the following code or name as first argument :"
     print "TOI: The Times Of India"
     print "HINDU: The Hindu"
-    print "HT: Hindustan Times"
     print "TIE: TheIndian Express"
 
 def main():
@@ -173,8 +182,6 @@ def main():
         TheIndianExpressHeadlines()
     elif newspaper == "HINDU" or newspaper == "The Hindu":
         TheHinduHeadlines()
-    elif newspaper == "HT" or newspaper == "Hindustan Times":
-        HindustanTimesHeadlines()
     else:
         print  "No news Paper Given as argument"
         Help()
