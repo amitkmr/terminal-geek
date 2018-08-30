@@ -19,6 +19,12 @@
  #  ---------------------------------------------------------------------------
 
  #   -------------------------------
+ #   0. GREETING ON START OF TERMINAL
+ #   -------------------------------
+
+ fortune | cowsay
+
+ #   -------------------------------
  #   1. ENVIRONMENT CONFIGURATION
  #   -------------------------------
 
@@ -30,11 +36,12 @@ export PS2="| => "
  #   Set Paths
  #   ------------------------------------------------------------
 export PATH="$PATH:/usr/local/bin/"
-export PATH="/usr/local/git/bin:/sw/bin/:/usr/local/bin:/usr/local/:/usr/local/sbin:/usr/local/mysql/bin:$PATH"
+export PYTHONSTARTUP="$HOME/.pythonrc.py"
+# export PATH="/usr/local/git/bin:/sw/bin/:/usr/local/bin:/usr/local/:/usr/local/sbin:/usr/local/mysql/bin:$PATH"
 
  #   Set Default Editor (change 'Nano' to the editor of your choice)
  #   ------------------------------------------------------------
-export EDITOR=/Applications/Atom.app
+# export EDITOR=/Applications/Code.app
 
  #   Set default blocksize for ls, df, du
  #   from this: http://hints.macworld.com/comment.php?mode=view&cid=24491
@@ -72,7 +79,7 @@ alias .3='cd ../../../'                     # Go back 3 directory levels
 alias .4='cd ../../../../'                  # Go back 4 directory levels
 alias .5='cd ../../../../../'               # Go back 5 directory levels
 alias .6='cd ../../../../../../'            # Go back 6 directory levels
-alias edit='open -a atom'                           # edit:         Opens any file in sublime editor
+alias edit='open -a Code'                           # edit:         Opens any file in sublime editor
 alias f='open -a Finder ./'                 # f:            Opens current directory in MacOS Finder
 alias ~="cd ~"                              # ~:            Go Home
 alias c='clear'                             # c:            Clear terminal display
@@ -359,10 +366,12 @@ function slack {
   open "https://timesinternet.slack.com/messages/@amit.kumar12/"
 
 }
+
 function yt {
-  open "https://www.youtube.com/"
+  open "https://www.youtube.com/results?search_query=$*"
 
 }
+
 function wp {
   open "https://web.whatsapp.com/"
 }
